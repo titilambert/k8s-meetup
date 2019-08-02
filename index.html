@@ -1,0 +1,428 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>K3S: K8S at Home</title>
+
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/white.css" id="theme">
+
+
+        <!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="lib/css/monokai.css">
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section data-background-opacity="0.7" data-background-image="images/background.jpg">
+                    <br/>
+                    <br/>
+                    <h1 style="color: black;">K3S: K8S at Home</h1>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <h4 style="color: black;">Montréal Kubernetes Meetup - 21/08/2019</h4>
+                    <div style="color: black;">Thibault Cohen</div>
+                    <br/>
+                    <div style="color: black; font-size: 10px">
+                    image source: http://brick-a-pickwick.over-blog.com/2018/03/foire-de-rouen-2018.html
+                    </div>
+                </section>
+                <section>
+                    <img src="images/nuance.png" width="700" style="border: none; box-shadow: none; background: none;"/>
+                    <br/>
+                    <br/>
+                    <h1>is recruting</h1>
+                </section>
+                <section>
+                    <section>
+                        <img src="images/k3s.svg" style="max-width: 1000px; border: none; box-shadow: none; background: none;"/>
+                        <br/>
+                        <br/>
+                        <div style="font-size: 50px;">
+                            <a href="https://k3s.io">https://k3s.io</a>
+                        </div>
+                    </section>
+                    <section>
+                        <h1>What is K3S ?</h1>
+                        <ul>
+                            <li>Certified Kubernetes distribution</li>
+                            <li>Lightweight Kubernetes</li>
+                            <li>Easy to install</li>
+                            <li>ONE binary of less than 40 MB. Only 512 MB of RAM required to run</li>
+                            <li>Developped by Rancher</li>
+                        </ul>
+                        <br/>
+                        <br/>
+                        <img src="images/rancher.png" style="max-width: 800px;"/>
+                    </section>
+                    <section>
+                        <h2>K3S doesn't include</h2>
+                        <ul>
+                            <li>NO Legacy, alpha, non-default features</li>
+                            <li>NO cloud providers</li>
+                            <li>NO storage plugin</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>K3S includes</h2>
+                        <ul>
+                            <li>Hyperkube</li>
+                            <li>Sqlite support in addition to etcd</li>
+                            <li>Containerd, CoreDNS, Flannel ( no more Docker :) )</li>
+                            <li>Service Load Balancer controller for bare metal cluster<div style="font-size: 30px"><a href="https://github.com/rancher/klipper-lb">https://github.com/rancher/klipper-lb</a></div></li>
+                            <li>Helm chart controller => Deploy helm chart through CRDs<div style="font-size: 30px"><a href="https://github.com/rancher/helm-controller">https://github.com/rancher/helm-controller</a></div></li>
+                        </ul>
+                    </section>
+                </section>
+                <section >
+                    <h1>!! Warning !!</h1>
+                    <h4>
+                    The following stuff is completly useless
+                    <br/>
+                    like a double decker couch
+                    </h4>
+                    <img style="border: none; box-shadow: none; background: none;" width="500" src="images/double_deck_couch_transp.png"/>
+                    <div style="font-size: 10px;">
+                    source: https://www.reddit.com/r/lego/comments/1y7hmx/double_decker_couch_awesome/
+                    </div>
+                </section>
+                <section>
+                    <h1>That's why it's</h1>
+                    <img src="images/awesome.png" height="700"  style="border: none; box-shadow: none; background: none;"/>
+                    <div style="font-size: 10px;">
+                    source: https://lego.fandom.com/wiki/File:The-lego-movie-awesome.png
+                    </div>
+                </section>
+                <section>
+                    <section>
+                        <h1>Using a K3S cluster to run
+                            A <br/>Home Automation System</h1>
+                    </section>
+                    <section>
+                        <h2>One requirement</h2>
+                        https://www.pinterest.ca/pin/553872454148951643/
+                        There is always something broken
+                        I don't want our lifes depend on you stuff
+                        I want to be able to turn on the light anytime
+                        Meaning, our lifes must NOT be dependend on your crappy stuff
+                        <h4>from my girlfriend</h4>
+                        <br/>
+                        <h2>We can continue to live if something crashes</h2>
+                    </section>
+                    <section>
+                        <h2>Home-Assistant</h2>
+                        <h4>as Home Automation Core</h4>
+                        <ul>
+                            <li>Open Source
+                                <div style="font-size: 30px;">
+                                    <strong>Privacy</strong> - (no Siri/Google Assistant/Alexa)
+                                </div>
+                            <li>On prem
+                                <div style="font-size: 30px;">
+                                    <strong>Full control</strong> - (no dependency on external services)<br/>
+                                </div>
+                            </li>
+                            <li>Python based
+                                <div style="font-size: 30px;">
+                                    <strong>Flexible/Hackable solution</strong> - (girlfriend's vision: breakable)
+                                </div>
+                            </li>
+                            <li>Huge Community
+                                <div style="font-size: 30px;">
+                                    <a href="https://community.home-assistant.io/">https://community.home-assistant.io/</a>
+                                </div>
+                                <div style="font-size: 30px;">
+                                    <a href="https://discord.gg/c5DvZ4e">https://discord.gg/c5DvZ4e</a>
+                                </div>
+                            </li>
+                            <li>More than 1400 device integrations
+                                <div style="font-size: 30px;"><a href="https://www.home-assistant.io/components/">https://www.home-assistant.io/components/</a></div>
+                            </li>
+                            <li>Easy to deploy on Docker using Hassio
+                                <div style="font-size: 30px;"><a href="https://www.home-assistant.io/hassio/">https://www.home-assistant.io/hassio/</a></div>
+                            </li>
+                        </ul>
+                        <img src="images/hass.svg" height="600" style="float: right; box-shadow: none; border: none; background: none;">
+                    </section>
+                    <section>
+                        <h2>The Cluster 1/2</h2>
+                        <table>
+                          <tbody>
+                            <tr>
+                              <td style="width: 33%; text-align: center">
+                                <div style="font-size: 30px;">
+                                Office
+                                </div>
+                                <div style="font-size: 40px;">
+                                Grotadmorv
+                                </div>
+                                <div style="font-size: 20px;">
+                                Master/Node
+                                <br/>
+                                Recuperated Lenovo X220,
+                                <br/>
+                                4 CPUs, 8 Go, x86
+                                </div>
+                              </td>
+                              <td style="width: 33%; text-align: center">
+                                <div style="font-size: 30px;">
+                                Swimming pool
+                                </div>
+                                <div style="font-size: 40px;">
+                                Zarbi-p
+                                </div>
+                                <div style="font-size: 20px;">
+                                Node (pool temperature sensor)
+                                <br/>
+                                Raspberry Pi Zero W,
+                                <br/>
+                                DS18B20 temperature sensor,
+                                <br/>
+                                1 CPU, 512 Mo, armv6l
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="vertical-align: top; max-width: 33%;">
+                                  <img src="images/grotadmorv.jpg"/>
+                              </td>
+                              <td style="vertical-align: top; max-width: 33%;">
+                                  <img src="images/zarbi-p.jpg"/>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>The Cluster 2/2</h4>
+                        <table>
+                          <tbody>
+                            <tr>
+                              <td style="width: 33%; text-align: center">
+                                <div style="font-size: 30px;">
+                                Dining room
+                                </div>
+                                <div style="font-size: 40px;">
+                                Zarbi-d
+                                </div>
+                                <div style="font-size: 20px;">
+                                Node (snapcast client)
+                                <br/>
+                                Raspberry Pi Zero W,
+                                <br/>
+                                PiZeroAudio Hat,
+                                <br/>
+                                1 CPU, 512 Mo, armv6l
+                                </div>
+                              </td>
+                              <td style="width: 33%; text-align: center">
+                                <div style="font-size: 30px;">
+                                Kitchen
+                                </div>
+                                <div style="font-size: 40px;">
+                                Zarbi-k
+                                </div>
+                                <div style="font-size: 20px;">
+                                Node (snapcast client)
+                                <br/>
+                                Raspberry Pi Zero W,
+                                <br/>
+                                PiZeroAudio Hat,
+                                <br/>
+                                1 CPU, 512 Mo, armv6l
+                                </div>
+                              </td>
+
+                            </tr>
+                            <tr>
+                              <td style="vertical-align: top; max-width: 33%;">
+                                  <img src="/images/zarbi-d.jpg"/>
+                              </td>
+                              <td style="vertical-align: top; max-width: 100px;">
+                                  <img src="images/zarbi-k.jpg"/>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                    </section>
+
+
+                    <section>
+                        <h2>K3S Installation</h2>
+                        <div style="font-size: 10px; width: 25%; float: right;">
+                            <img src="images/instructions.png" />
+                            source: https://www.lego.com/en-us/service/buildinginstructions/search#?search&text=10040%2520Black%2520Sea%2520Barracuda%2520Pirates
+                        </div>
+                        <div style="width: 75%;">
+                        Master
+                        <pre><code class="console" data-trim >
+                        $ wget -O k3s https://github.com/rancher/k3s/releases/download/v0.7.0/k3s
+                        $ chmod +x k3s
+                        # sudo ./k3s server
+						</code></pre>
+						Get your kubeconfig
+						<pre><code class="console" data-trim >
+                        # cat /etc/rancher/k3s/k3s.yaml
+                        </code></pre>
+                        Node
+                        <pre><code class="console" data-trim >
+                        $ wget -O k3s https://github.com/rancher/k3s/releases/download/v0.7.0/k3s-armhf
+                        $ chmod +x k3s
+                        # sudo ./k3s agent \
+                            --server https://SERVER_IP:6443 \
+                            --token SERVER_TOKEN \
+                            --pause-image  titilambert/armv6-pause:latest \
+                            --node-taint raspi=true:NoExecute --node-taint ...\
+                        </code></pre>
+                        </div>
+
+                        <div style="font-size: 30px">
+                        Note: Please use systemd ...
+                        </div>
+                    </section>
+                    <section>
+                        <h2>Workloads Deployments</h2>
+                        <div style="font-size: 10px; width: 23%; float: right;">
+                            <img src="images/instructions2.png" />
+                            source: https://www.lego.com/en-us/service/buildinginstructions/search#?search&text=10152%2520Maersk%2520Sealand%2520Container%2520Ship%2520City%2520Harbour
+                        </div>
+                        <div style="width: 77%;">
+                        Main workloads 
+                        <pre><code class="console" data-trim >
+                        $ k3s kubectl apply -f local-storage-class.yml
+                        $ k3s kubectl apply -f traefik-dns.yml
+                        $ k3s kubectl apply -f librespot-snapserver.yml
+                        $ k3s kubectl apply -f postfix.yml
+                        $ k3s kubectl apply -f hassio-mqtt.yml
+                        $ k3s kubectl apply -f hassio-mariadb.yml
+                        $ k3s kubectl apply -f hass.yml
+                        $ k3s kubectl apply -f ...
+                        </code></pre>
+                        Raspberry workloads
+                        <pre><code class="console" data-trim >
+                        $ k3s kubectl apply -f snapclient.yaml
+                        $ k3s kubectl apply -f mqtt-sensor-pool.yaml
+                        </code></pre>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>What's Currently running</h2>
+                        <div style="float: left; width: 50%;">
+                        <ul>
+                            <li>Traefik (TLS with DNS challenge)</li>
+                            <li>Home Assistant</li>
+                            <li>Mqtt Server</li>
+                            <li>Snapcast Client as a daemonset</li>
+                            <li>Omada controller
+                                <div style="font-size: 30px">
+                                Manage TP-Link Wifi APs
+                                </div>
+                            </li>
+                            <li>Swimming pool sensor</li>
+                        </ul>
+                        </div>
+                        <div style="float: right; width: 50%;">
+                        <ul>
+                            <li>Postfix relay</li>
+                            <li>Small mqtt daemons:
+                                <div style="font-size: 30px">
+                                * Wifi switches<br/>
+                                * Bluetooth switches<br/>
+                                * Zigbee heaters
+                                </div>
+                            </li>
+                            <li>Snapcast Client as a daemonset</li>
+                            <li>InfluxDB/Grafana</li>
+                            <li>Wifi switches controller</li>
+                        </ul>
+                        </div>
+                        <div style="clear: both; width: 100%; text-align: center;">
+                        <img src="images/running.png" height="400" style="border: none; box-shadow: none; background: none;"/>
+                        </div>
+
+                    </section>
+                    <section>
+                        <h1>DEMO</h1>
+                    </section>
+                    <section  data-background-opacity="0.2" data-background-image="images/next.png" >
+                        <h2>What's next ?</h2>
+                        <ul>
+                            <li>Write a tutorial and release K8s manifests</li>
+                            <li>Add Native Kubernetes support to Hass.io</li>
+                            <li>Integrate Nuance technologies (STT/TTS/NLU/Dialog) to Home Assistant</br>
+                                <strong>Nuance doesn't collect any metadata AND
+                                Nuance doesn't spy on you :)</strong></li>
+                            <li>Transform each K3S node as:
+                                <br/>
+                                * a Nuance STT/TTS/NLU/Dialog client
+                                <br/>
+                                * a Find3 node for in house localization
+                            <li>KNative to run Home-Assistant tasks ?</li>
+                            <li>...</li>
+                        </ul>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <div style="font-size: 15px">
+                            image source: https://www.bricklink.com/v2/catalog/catalogitem.page?S=21103-1#T=S&O={"iconly":0}
+                        </div>
+                    </section>
+
+                </section>
+                <section data-background-opacity="0.7" data-background-image="images/background.jpg">
+                    <h1 style="color: black;">Q&A</h1>
+					<h2 style="color: black;">K3S: K8S at Home</h2>
+					<br/>
+					<br/>
+					<br/>
+                    <ul>
+                        <li><a style="color: black;" href="https://k3s.io">https://k3s.io</a></li>
+                        <li><a style="color: black;" href="https://k3os.io">https://k3os.io</a></li>
+                        <li><a style="color: black;" href="https://home-assistant.io">https://home-assistant.io</a></li>
+                    </ul>
+					<br/>
+					<br/>
+					<br/>
+					<h4 style="color: black;" >Nuance is still recruting</h4>
+                </section>
+            </div>
+        </div>
+
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // More info about config & dependencies:
+            // - https://github.com/hakimel/reveal.js#configuration
+            // - https://github.com/hakimel/reveal.js#dependencies
+            Reveal.initialize({
+                width: "90%",
+                height: "90%",
+                //margin: 0,
+                //minScale: 0.8,
+                //maxScale: 1.5,
+                hash: true,
+                dependencies: [
+                    { src: 'plugin/markdown/marked.js' },
+                    { src: 'plugin/markdown/markdown.js' },
+                    { src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/highlight/highlight.js', async: true }
+                ]
+            });
+        </script>
+    </body>
+</html>
